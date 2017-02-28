@@ -29,11 +29,11 @@ void DriveWithJoy::Initialize() {
 	Robot::driveTrain->stop();
 
 
-	ahrs = new AHRS(SPI::Port::kMXP);
+	//ahrs = new AHRS(SPI::Port::kMXP);
 	//RobotMap::driveGyro->Reset();
 	RobotMap::drivegyro->ZeroYaw();
 }
-//for Gunnar
+
 // Called repeatedly when this Command is scheduled to run
 void DriveWithJoy::Execute() {
 

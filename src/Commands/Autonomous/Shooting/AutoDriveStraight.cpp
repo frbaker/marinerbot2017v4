@@ -62,3 +62,4 @@ void AutoDriveStraight::NoDriveIt(){
 
 	Robot::driveTrain->takeJoystickInputs(0.0, 0.0, 0.0, 0.0);
 }
+

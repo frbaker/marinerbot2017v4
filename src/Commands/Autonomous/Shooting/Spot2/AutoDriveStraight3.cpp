@@ -36,7 +36,7 @@ void AutoDriveStraight3::Execute() {
 bool AutoDriveStraight3::IsFinished() {
 
 	float encDist = (Robot::driveTrain->lf->GetEncPosition()*25.12 + Robot::driveTrain->lr->GetEncPosition()*25.12 + Robot::driveTrain->rf->GetEncPosition()*25.12 + Robot::driveTrain->rr->GetEncPosition()*25.12) / 4;
-	if(encDist >9){
+	if(encDist > 9){
 		return true;
 	}
 	else{

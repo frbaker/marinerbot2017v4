@@ -14,6 +14,10 @@
 
 #include "Commands/Autonomous/Shooting/AutoDriveStraight.h"
 #include "Commands/Autonomous/Shooting/AutoTurnToShoot.h"
+#include "Commands/Autonomous/Shooting/Spot1/AutoDriveStraight2.h"
+#include "Commands/Autonomous/Shooting/AutoTurnToShoot2.h"
+#include "Commands/Autonomous/Shooting/AutoDriveStraight02.h"
+#include "Commands/FireBalls.h"
 
 /* Add for any subcommands*/
 //#include "Commands/UseBallFeeder.h"
@@ -50,6 +54,12 @@ Auton1::Auton1() {
 
 AddSequential(new AutoDriveStraight);
 AddSequential(new AutoTurnToShoot);
+AddSequential(new AutoDriveStraight2);
+AddSequential(new AutoTurnToShoot2);
+AddSequential(new AutoDriveStraight02);
+AddSequential(new FireBalls);
+
+
 //AddSequential(new )
        // AddParallel(new UseBallFeeder());
         //AddParallel(new UseShooter());

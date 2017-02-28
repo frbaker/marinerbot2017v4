@@ -168,25 +168,17 @@ double DriveTrain::calculatePID(double setpoint, double current, double Kp, doub
 }
 
 
-float DriveTrain::ReturnEncoderDistance(int lf_encoder, int lr_encoder, int rf_encoder, int rr_encoder, float encDistance){
-//This method returns the encoder distances
+float DriveTrain::ReturnEncoderDistance(){
+	//This method returns the average of the 4 encoder distances
 
-lf_encoder = lf->GetEncPosition()*25.12;
-lr_encoder = lr->GetEncPosition()*25.12;
+	int lf_encoder = lf->GetEncPosition()*25.12;
+	int lr_encoder = lr->GetEncPosition()*25.12;
+	int rf_encoder = rf->GetEncPosition()*25.12;
+	int rr_encoder = rr->GetEncPosition()*25.12;
 
-rf_encoder = rf->GetEncPosition()*25.12;
-rr_encoder = rr->GetEncPosition()*25.12;
+	float encDistance = (lf_encoder + lr_encoder + rr_encoder + rf_encoder) / 4; //averages the values from all encoders
 
-
-encDistance = (lf_encoder + lr_encoder + rr_encoder + rf_encoder) / 2; //averages the values from all encoders
-
-SmartDashboard::PutNumber("Encoder Distance", encDistance);
-SmartDashboard::PutNumber("lf Encoder", lf_encoder);
-SmartDashboard::PutNumber("lr Encoder", lr_encoder);
-SmartDashboard::PutNumber("rf Encoder", rf_encoder);
-SmartDashboard::PutNumber("rr Encoder", rr_encoder);
-return encDistance;
-
+	return encDistance;
 }
 
 void DriveTrain::ResetEncoderDistance(){
@@ -217,6 +209,9 @@ void DriveTrain::ResetGyroAngle(){
 
 //}
 void DriveTrain::takeJoystickInputs(double x, double y, double z, double angle){
+	DriveTrain::mecanum->MecanumDrive_Cartesian(Db(x), Db(y), Db(z));
+}
+void DriveTrain::autoDrive(double x, double y, double z, double angle){
 	DriveTrain::mecanum->MecanumDrive_Cartesian(Db(x), Db(y), Db(z));
 }
 
