@@ -100,88 +100,83 @@ void AutonomousCommand::Interrupted() {
 
 }
 */
-void AutonomousCommand::auton1(){
-	double startTime = Timer::GetFPGATimestamp();
-	float usedEncDist = 0.0;
-	//Initially our encoder Distance should start at null, 0, nada, nothing
 
+void AutonomousCommand::setAutonStep(int nextStep){
+	autonStep = nextStep;
+}
+int AutonomousCommand::getAutonStep(){
+	return autonStep;
+}
+void AutonomousCommand::setUsedEncDist(int totalDist){
+	usedEncDist = totalDist;
+}
+int AutonomousCommand::getUsedEncDist(){
+	return usedEncDist;
+}
+
+
+
+void AutonomousCommand::auton1(){
 	/*
 	 * 1. Drive Forward 60% speed for 9 inches
-	 *
 	 */
-	while(Robot::driveTrain->ReturnEncoderDistance()-usedEncDist < 9){
-		//get our current encDistance - should add a sanity check to keep from looping forever if we don't get a sensor reading
-		Robot::driveTrain->autoDrive(0.0, 0.6, 0.0, RobotMap::drivegyro->GetAngle());
-
-		//Sanity Check - This should never take more then X seconds - if it does, break out of the loop
-		if (Timer::GetFPGATimestamp()<startTime+3.0){
-			break;
+	if (getAutonStep() == 1){
+		if(Robot::driveTrain->ReturnEncoderDistance()-getUsedEncDist() < 9){
+			Robot::driveTrain->autoDrive(0.0, 0.6, 0.0, RobotMap::drivegyro->GetAngle());
+		}
+		else {
+			setAutonStep(getAutonStep() + 1);  //go to next step
+			SmartDashboard::PutNumber("Routine1 End1 EncDist", getUsedEncDist()); //show us the average encoder distance values
+			setUsedEncDist(Robot::driveTrain->ReturnEncoderDistance()); //record used Encoder Distance at end of step 1
 		}
 	}
-	SmartDashboard::PutNumber("Routine1 End1 EncDist", Robot::driveTrain->ReturnEncoderDistance());
-	usedEncDist = Robot::driveTrain->ReturnEncoderDistance();
-
 
 	/*
 	 * 2. Turn left till we reach -90 degrees
-	 *
 	 */
-	while(RobotMap::drivegyro->GetAngle() > -90){
-		//question? - will this actually turn left?
-		Robot::driveTrain->autoDrive(0.0, 0.0, -0.3, 0.0);
-
-		//Sanity Check - This should never take more then X seconds - if it does, break out of the loop
-		if (Timer::GetFPGATimestamp()<startTime+5.0){
-			break;
+	if (getAutonStep() == 2){
+		if(RobotMap::drivegyro->GetAngle() > -90){
+			Robot::driveTrain->autoDrive(0.0, 0.0, -0.3, 0.0);
+		}
+		else{
+			setAutonStep(getAutonStep() + 1); //go to next step
+			SmartDashboard::PutNumber("Routine1 End2 EncDist", Robot::driveTrain->ReturnEncoderDistance());
+			SmartDashboard::PutNumber("Routine1 End2 Angle", RobotMap::drivegyro->GetAngle());
+			setUsedEncDist(Robot::driveTrain->ReturnEncoderDistance()); //record used Encoder Distance at end of step 2
 		}
 	}
-	SmartDashboard::PutNumber("Routine1 End2 EncDist", Robot::driveTrain->ReturnEncoderDistance());
-	SmartDashboard::PutNumber("Routine1 End2 Angle", RobotMap::drivegyro->GetAngle());
-	usedEncDist = Robot::driveTrain->ReturnEncoderDistance();
-
 
 	/*
 	 * 3. Drive Forward 60% speed for 216 inches
-	 *
 	 */
-	while(Robot::driveTrain->ReturnEncoderDistance()-usedEncDist < 216){
-		//get our current encDistance - should add a sanity check to keep from looping forever if we don't get a sensor reading
-		Robot::driveTrain->autoDrive(0.0, 0.6, 0.0, RobotMap::drivegyro->GetAngle());
-
-		//Sanity Check - This should never take more then X seconds - if it does, break out of the loop
-		if (Timer::GetFPGATimestamp()<startTime+10.0){
-			break;
+	if (getAutonStep() == 3){
+		if(Robot::driveTrain->ReturnEncoderDistance()-getUsedEncDist() < 216){
+			//get our current encDistance - should add a sanity check to keep from looping forever if we don't get a sensor reading
+			Robot::driveTrain->autoDrive(0.0, 0.6, 0.0, RobotMap::drivegyro->GetAngle());
+		}
+		else{
+			setAutonStep(getAutonStep() + 1); //go to next step
+			SmartDashboard::PutNumber("Routine1 End3 EncDist", Robot::driveTrain->ReturnEncoderDistance());
+			setUsedEncDist(Robot::driveTrain->ReturnEncoderDistance()); //record used Encoder Distance at end of step 3
 		}
 	}
-	SmartDashboard::PutNumber("Routine1 End3 EncDist", Robot::driveTrain->ReturnEncoderDistance());
-	usedEncDist = Robot::driveTrain->ReturnEncoderDistance();
-
 
 	/*
 	 * 4. Turn left another -36 degrees till we reach -126
 	 *
 	 */
-	while(RobotMap::drivegyro->GetAngle() > -126){
-		//question? - will this actually turn left?
-		Robot::driveTrain->autoDrive(0.0, 0.0, -0.3, 0.0);
-
-		//Sanity Check - This should never take more then X seconds - if it does, break out of the loop
-		if (Timer::GetFPGATimestamp()<startTime+12.0){
-			break;
+	if (getAutonStep() == 4){
+		if(RobotMap::drivegyro->GetAngle() > -126){
+			Robot::driveTrain->autoDrive(0.0, 0.0, -0.3, 0.0);
+		}
+		else{
+			setAutonStep(getAutonStep() + 1); //go to next step
+			SmartDashboard::PutNumber("Routine1 End4 EncDist", Robot::driveTrain->ReturnEncoderDistance());
+			SmartDashboard::PutNumber("Routine1 End4 Angle", RobotMap::drivegyro->GetAngle());
+			setUsedEncDist(Robot::driveTrain->ReturnEncoderDistance()); //record used Encoder Distance at end of step 2
 		}
 	}
-	SmartDashboard::PutNumber("Routine1 End4 EncDist", Robot::driveTrain->ReturnEncoderDistance());
-	SmartDashboard::PutNumber("Routine1 End4 Angle", RobotMap::drivegyro->GetAngle());
-	usedEncDist = Robot::driveTrain->ReturnEncoderDistance();
-	while(Robot::driveTrain->ReturnEncoderDistance()-usedEncDist < 9){
-			//get our current encDistance - should add a sanity check to keep from looping forever if we don't get a sensor reading
-			Robot::driveTrain->autoDrive(0.0, 0.6, 0.0, RobotMap::drivegyro->GetAngle());
 
-			//Sanity Check - This should never take more then X seconds - if it does, break out of the loop
-			if (Timer::GetFPGATimestamp()<startTime+3.0){
-				break;
-			}
-	}
 
 
 
