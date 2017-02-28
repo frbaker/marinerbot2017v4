@@ -37,8 +37,8 @@ public:
 	void setAutonStep(int autonStep);
 	int getAutonStep();
 
-	void AutonomousCommand::setUsedEncDist(int totalDist);
-	int AutonomousCommand::getUsedEncDist();
+	void setUsedEncDist(int totalDist);
+	int getUsedEncDist();
 
 
 	void auton1();
