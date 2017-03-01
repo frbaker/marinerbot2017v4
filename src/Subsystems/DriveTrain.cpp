@@ -61,6 +61,8 @@ DriveTrain::DriveTrain() : Subsystem("DriveTrain") {
    rr->SetFeedbackDevice(CANTalon::CtreMagEncoder_Absolute);
    rr->SetSensorDirection(true);
 
+
+
     //gg = RobotMap::driveGyro;
 //*********** Eclipse is stupid and is not recognizing these lf and rr things,
 /*
@@ -209,10 +211,10 @@ void DriveTrain::ResetGyroAngle(){
 
 //}
 void DriveTrain::takeJoystickInputs(double x, double y, double z, double angle){
-	DriveTrain::mecanum->MecanumDrive_Cartesian(Db(x), Db(y), Db(z));
+	DriveTrain::mecanum->MecanumDrive_Cartesian(Db(x), Db(y), Db(z), angle);
 }
 void DriveTrain::autoDrive(double x, double y, double z, double angle){
-	DriveTrain::mecanum->MecanumDrive_Cartesian(Db(x), Db(y), Db(z));
+	DriveTrain::mecanum->MecanumDrive_Cartesian(Db(x), Db(y), Db(z), angle);
 }
 
 void DriveTrain::stop(){
@@ -221,21 +223,23 @@ void DriveTrain::stop(){
 
 
 double DriveTrain::Db(double axisVal){
-	//if (axisVal < -0.10){
-		//if(axisVal <= -0.95){
-			//return axisVal;
-		//}
-	return axisVal;
-
-	//}
-	//else if (axisVal > 0.10){
-		//if(axisVal >= 0.95){
-			//return 0.95;
-		//}
-		//return axisVal;
-	//}
-
-	//return 0;
+	if (axisVal < -0.05){
+		if(axisVal <= -0.95){ //Max reverse is -.95
+			return -0.95; //so return -.95
+		}
+		else{
+			return axisVal; //returns the same value passed in
+		}
+	}
+	else if (axisVal > 0.05){
+		if(axisVal >= 0.95){ //Max is .95
+			return 0.95; //so return .95
+		}
+		else{
+			return axisVal; //returns the same value passed in
+		}
+	}
+	return 0.0; //if the value is between -.05 and .05, will return 0.0
 
 }
 void DriveTrain::takeAutoInputs(double y1, double y2){
