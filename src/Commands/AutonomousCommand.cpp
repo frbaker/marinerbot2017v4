@@ -38,6 +38,7 @@ void AutonomousCommand::Initialize() {
 	double startTime = Timer::GetFPGATimestamp();
 	//std::time_t pstartTime = std::time(0); //use for practice periods only
 	SmartDashboard::PutNumber("Auton StartTime", startTime);
+
 }
 
 // Called repeatedly when this Command is scheduled to run
@@ -50,14 +51,17 @@ void AutonomousCommand::Execute() {
 	switch(autonNumber){
 	case 1:
 		//position 1:Blue
+		SmartDashboard::PutNumber("Running Autonomous Routine", autonNumber);
 		auton1();
 		break;
 	case 2:
 		//position 2:Blue
+		SmartDashboard::PutNumber("Running Autonomous Routine", autonNumber);
 		auton2();
 		break;
 	case 3:
 		//position 3:Blue
+		SmartDashboard::PutNumber("Running Autonomous Routine", autonNumber);
 		auton3();
 		break;
 	case 4:
@@ -108,51 +112,37 @@ void AutonomousCommand::Interrupted() {
 }
 */
 
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 9e46074786ca88fa5c609b02d2b801d87cc84f9e
 void AutonomousCommand::setAutonStep(int nextStep){
 	autonStep = nextStep;
 }
 int AutonomousCommand::getAutonStep(){
 	return autonStep;
 }
-<<<<<<< HEAD
+
 void AutonomousCommand::setUsedEncDist(float totalDist){
 	usedEncDist = totalDist;
 }
 float AutonomousCommand::getUsedEncDist(){
-=======
-void AutonomousCommand::setUsedEncDist(int totalDist){
-	usedEncDist = totalDist;
-}
-int AutonomousCommand::getUsedEncDist(){
->>>>>>> 9e46074786ca88fa5c609b02d2b801d87cc84f9e
+
 	return usedEncDist;
 }
 
 
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> 9e46074786ca88fa5c609b02d2b801d87cc84f9e
 void AutonomousCommand::auton1(){
 	/*
 	 * 1. Drive Forward 60% speed for 9 inches
 	 */
 	if (getAutonStep() == 1){
+		//SmartDashboard::PutNumber("Going Forward 9", "yes");
 		if(Robot::driveTrain->ReturnEncoderDistance()-getUsedEncDist() < 9){
 			Robot::driveTrain->autoDrive(0.0, 0.6, 0.0, RobotMap::drivegyro->GetAngle());
 		}
 		else {
-<<<<<<< HEAD
+
 			Robot::driveTrain->autoDrive(0.0, 0.0, 0.0, 0.0); //full stop
-=======
->>>>>>> 9e46074786ca88fa5c609b02d2b801d87cc84f9e
+
 			setAutonStep(getAutonStep() + 1);  //go to next step
 			SmartDashboard::PutNumber("Routine1 End1 EncDist", getUsedEncDist()); //show us the average encoder distance values
 			setUsedEncDist(Robot::driveTrain->ReturnEncoderDistance()); //record used Encoder Distance at end of step 1
@@ -167,10 +157,9 @@ void AutonomousCommand::auton1(){
 			Robot::driveTrain->autoDrive(0.0, 0.0, -0.3, 0.0);
 		}
 		else{
-<<<<<<< HEAD
+
 			Robot::driveTrain->autoDrive(0.0, 0.0, 0.0, 0.0); //full stop
-=======
->>>>>>> 9e46074786ca88fa5c609b02d2b801d87cc84f9e
+
 			setAutonStep(getAutonStep() + 1); //go to next step
 			SmartDashboard::PutNumber("Routine1 End2 EncDist", Robot::driveTrain->ReturnEncoderDistance());
 			SmartDashboard::PutNumber("Routine1 End2 Angle", RobotMap::drivegyro->GetAngle());
@@ -187,10 +176,9 @@ void AutonomousCommand::auton1(){
 			Robot::driveTrain->autoDrive(0.0, 0.6, 0.0, RobotMap::drivegyro->GetAngle());
 		}
 		else{
-<<<<<<< HEAD
+
 			Robot::driveTrain->autoDrive(0.0, 0.0, 0.0, 0.0); //full stop
-=======
->>>>>>> 9e46074786ca88fa5c609b02d2b801d87cc84f9e
+
 			setAutonStep(getAutonStep() + 1); //go to next step
 			SmartDashboard::PutNumber("Routine1 End3 EncDist", Robot::driveTrain->ReturnEncoderDistance());
 			setUsedEncDist(Robot::driveTrain->ReturnEncoderDistance()); //record used Encoder Distance at end of step 3
@@ -205,17 +193,16 @@ void AutonomousCommand::auton1(){
 			Robot::driveTrain->autoDrive(0.0, 0.0, -0.3, 0.0);
 		}
 		else{
-<<<<<<< HEAD
+
 			Robot::driveTrain->autoDrive(0.0, 0.0, 0.0, 0.0); //full stop
-=======
->>>>>>> 9e46074786ca88fa5c609b02d2b801d87cc84f9e
+
 			setAutonStep(getAutonStep() + 1); //go to next step
 			SmartDashboard::PutNumber("Routine1 End4 EncDist", Robot::driveTrain->ReturnEncoderDistance());
 			SmartDashboard::PutNumber("Routine1 End4 Angle", RobotMap::drivegyro->GetAngle());
 			setUsedEncDist(Robot::driveTrain->ReturnEncoderDistance()); //record used Encoder Distance at end of step 2
 		}
 	}
-<<<<<<< HEAD
+
 	/*
 	 * 5. Start the shooter, subshooter, ball vibrator, and x-mas tree
 	 */
@@ -237,12 +224,7 @@ void AutonomousCommand::auton1(){
 			setUsedEncDist(Robot::driveTrain->ReturnEncoderDistance()); //record used Encoder Distance at end of step 2
 		}
 	}
-=======
 
-
-
-
->>>>>>> 9e46074786ca88fa5c609b02d2b801d87cc84f9e
 }
 
 void AutonomousCommand::auton2(){

@@ -101,16 +101,14 @@ void Robot::DisabledPeriodic() {
 }
 
 void Robot::AutonomousInit() {
+	//Setting the drivetrain talons to brake mode.
+			Robot::driveTrain->lf->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
+			Robot::driveTrain->rf->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
+			Robot::driveTrain->rr->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
+			Robot::driveTrain->lr->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
+
 	if (autonomousCommand.get() != nullptr)
 		autonomousCommand->Start();
-
-
-	//Setting the drivetrain talons to brake mode.
-		Robot::driveTrain->lf->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
-		Robot::driveTrain->rf->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
-		Robot::driveTrain->rr->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
-		Robot::driveTrain->lr->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
-
 
 }
 
@@ -119,6 +117,12 @@ void Robot::AutonomousPeriodic() {
 }
 
 void Robot::TeleopInit() {
+	//Setting the DriveTrain Talons to Coast Mode.
+				Robot::driveTrain->lf->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
+				Robot::driveTrain->rf->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
+				Robot::driveTrain->rr->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
+				Robot::driveTrain->lr->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
+
 	// This makes sure that the autonomous stops running when
 	// teleop starts running. If you want the autonomous to
 	// continue until interrupted by another command, remove
@@ -126,13 +130,10 @@ void Robot::TeleopInit() {
 	if (autonomousCommand.get() != nullptr)
 		autonomousCommand->Cancel();
 	//RobotMap::driveGyro->Reset();
+
 	RobotMap::drivegyro->Reset();
 
-	//Setting the DriveTrain Talons to Coast Mode.
-			Robot::driveTrain->lf->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
-			Robot::driveTrain->rf->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
-			Robot::driveTrain->rr->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
-			Robot::driveTrain->lr->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
+
 
 
 
@@ -142,19 +143,18 @@ void Robot::TeleopPeriodic() {
 	Scheduler::GetInstance()->Run();
 
 		double shooterVolts = RobotMap::shooterAdjusterShooterPot->GetAverageVoltage();
-
 		SmartDashboard::PutNumber("Shooter Pot", shooterVolts);
 
-		double gearVoltage = RobotMap::gearSideUltra->GetAverageVoltage();
-		double gearDistance = gearVoltage/0.00931; //should return distance in inches (if 4.77 v is applied)
-		double driveAngle = RobotMap::drivegyro->GetAngle();
+		//double gearVoltage = RobotMap::gearSideUltra->GetAverageVoltage();
+		//double gearDistance = gearVoltage/0.00931; //should return distance in inches (if 4.77 v is applied)
+		//double driveAngle = RobotMap::drivegyro->GetAngle();
 		//double gearDistance = gearVoltage/0.00644; //should return distance in inches (if 3.3 v is applied)
-		SmartDashboard::PutNumber("Gear Range", gearDistance);
+		//SmartDashboard::PutNumber("Gear Range", gearDistance);
 		//double msAngle = RobotMap::driveGyro->GetYaw();
 
 		//SmartDashboard::PutNumber("Drive Yaw",  RobotMap::drivegyro->GetYaw());
 		//SmartDashboard::PutNumber("Drive Yaw",  RobotMap::drivegyro->GetYaw());
-		SmartDashboard::PutNumber("Drive Angle", driveAngle);
+		//SmartDashboard::PutNumber("Drive Angle", driveAngle);
 		//SmartDashboard::PutNumber("Drive X",  RobotMap::driveGyro->GetRawGyroX());
 }
 
