@@ -94,7 +94,7 @@ void RobotMap::init() {
     driveTrainRf.reset(new CANTalon(5));
     lw->AddActuator("DriveTrain", "Rf", driveTrainRf);
     
-    driveTrainLr.reset(new CANTalon(0));
+    driveTrainLr.reset(new CANTalon(12));
     lw->AddActuator("DriveTrain", "Lr", driveTrainLr);
     
     driveTrainRr.reset(new CANTalon(4));

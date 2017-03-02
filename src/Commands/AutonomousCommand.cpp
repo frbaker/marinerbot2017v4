@@ -41,8 +41,9 @@ void AutonomousCommand::Initialize() {
 void AutonomousCommand::Execute() {
 	setElapsedTime(getStartTime());
 
-	if (getElapsedTime() > 15){
-		End();
+	if (getElapsedTime() > 35){
+	//if (getElapsedTime() > 15){
+				End();
 		this->Cancel();
 	}
 
@@ -50,20 +51,42 @@ void AutonomousCommand::Execute() {
 	// are not working for us - should be commented out
 	//for competition (if used, should be moved to each individual case
 	//as the timming will be different for each scenario)
+/*
+	if (getElapsedTime() < 1.5 ) {
+		setAutonStep(1); //drive forward 9"
+	}
+	else if (getElapsedTime() >= 1.5 && getElapsedTime()<2.7){
+		setAutonStep(2); //turn -90 degrees
+	}
+	else if (getElapsedTime() >= 2.7 && getElapsedTime()<7.7){
+		setAutonStep(3); //drive 216 inches
+	}
+	else if (getElapsedTime() >= 7.7 && getElapsedTime()< 8.3){
+		setAutonStep(4); //turn
+	}
+	else if (getElapsedTime() >= 8.3){
+		setAutonStep(5); //fire
+	}
+*/
 
-		if (getElapsedTime() >= 2 && getElapsedTime()<3){
-			setAutonStep(2);
-		}
-		else if (getElapsedTime() >= 3 && getElapsedTime()<4){
-			setAutonStep(3);
-		}
-		else if (getElapsedTime() >= 4 && getElapsedTime()<8){
-			setAutonStep(4);
-		}
-		else if (getElapsedTime() >= 8){
-			setAutonStep(5);
-		}
-
+	if (getElapsedTime() < 4.5 ) {
+		setAutonStep(1); //drive forward 9"
+	}
+	else if (getElapsedTime() >= 4.5 && getElapsedTime()<9.7){
+		setAutonStep(2); //turn -90 degrees
+	}
+	else if (getElapsedTime() >= 9.7 && getElapsedTime()<14.7){
+		setAutonStep(3); //drive 216 inches
+	}
+	else if (getElapsedTime() >= 14.7 && getElapsedTime()< 18.3){
+		setAutonStep(4); //turn
+	}
+	else if (getElapsedTime() >= 18.3 && getElapsedTime()< 25){
+		setAutonStep(5); //fire
+	}
+	else if (getElapsedTime() >= 25){
+		setAutonStep(6); //nothing
+	}
 		//End of testing code
 
 
@@ -177,10 +200,6 @@ float AutonomousCommand::getUsedEncDist(){
 
 
 void AutonomousCommand::auton1(){
-
-
-
-
 	/*
 	 * 1. Drive Forward 60% speed for 9 inches
 	 */
@@ -191,9 +210,7 @@ void AutonomousCommand::auton1(){
 			Robot::driveTrain->autoDrive(0.0, 0.6, 0.0, RobotMap::drivegyro->GetAngle());
 		}
 		else {
-
 			Robot::driveTrain->autoDrive(0.0, 0.0, 0.0, 0.0); //full stop
-
 			setAutonStep(getAutonStep() + 1);  //go to next step
 			SmartDashboard::PutNumber("Routine1 End1 EncDist", getUsedEncDist()); //show us the average encoder distance values
 			setUsedEncDist(Robot::driveTrain->ReturnEncoderDistance()); //record used Encoder Distance at end of step 1
@@ -209,9 +226,7 @@ void AutonomousCommand::auton1(){
 			Robot::driveTrain->autoDrive(0.0, 0.0, -0.3, 0.0);
 		}
 		else{
-
 			Robot::driveTrain->autoDrive(0.0, 0.0, 0.0, 0.0); //full stop
-
 			setAutonStep(getAutonStep() + 1); //go to next step
 			SmartDashboard::PutNumber("Routine1 End2 EncDist", Robot::driveTrain->ReturnEncoderDistance());
 			SmartDashboard::PutNumber("Routine1 End2 Angle", RobotMap::drivegyro->GetAngle());
@@ -229,9 +244,7 @@ void AutonomousCommand::auton1(){
 			Robot::driveTrain->autoDrive(0.0, 0.6, 0.0, RobotMap::drivegyro->GetAngle());
 		}
 		else{
-
 			Robot::driveTrain->autoDrive(0.0, 0.0, 0.0, 0.0); //full stop
-
 			setAutonStep(getAutonStep() + 1); //go to next step
 			SmartDashboard::PutNumber("Routine1 End3 EncDist", Robot::driveTrain->ReturnEncoderDistance());
 			setUsedEncDist(Robot::driveTrain->ReturnEncoderDistance()); //record used Encoder Distance at end of step 3
@@ -239,11 +252,11 @@ void AutonomousCommand::auton1(){
 	}
 
 	/*
-	 * 4. Turn left another -36 degrees till we reach -126
+	 * 4. Turn left another -36 degrees till we reach -135
 	 */
 	if (getAutonStep() == 4){
-		SmartDashboard::PutString("Turning to", "-126 degrees");
-		if(RobotMap::drivegyro->GetAngle() > -126){
+		SmartDashboard::PutString("Turning to", "-135 degrees");
+		if(RobotMap::drivegyro->GetAngle() > -135){
 			Robot::driveTrain->autoDrive(0.0, 0.0, -0.3, 0.0);
 		}
 		else{
@@ -260,14 +273,14 @@ void AutonomousCommand::auton1(){
 	/*
 	 * 5. Start the shooter, subshooter, ball vibrator, and x-mas tree
 	 */
+	//todo add a timeout
 	if (getAutonStep() == 5){
 		//SmartDashboard::PutString("Shooting");
 		if(RobotMap::drivegyro->GetAngle() > -126){
 			Robot::shooter->justShootMe();
-			/*RobotMap::ballVibrator->Set(0.25);
-			Robot::shooter->shooterMotor->Set(0.7);
-			RobotMap::ballFeederBallFeederSpike->Set(0.5);
-			RobotMap::ballSubFeeder->Set(0.75);*/
+			RobotMap::ballVibrator->Set(0.25);
+			RobotMap::ballFeederBallFeederSpike->Set(0.5); //the tree (no longer on a spike relay)
+			RobotMap::ballSubFeeder->Set(0.75); //The subfeeder
 		}
 		else{
 			RobotMap::ballVibrator->Set(0.0); //stop
@@ -279,6 +292,12 @@ void AutonomousCommand::auton1(){
 			SmartDashboard::PutNumber("Routine1 End4 Angle", RobotMap::drivegyro->GetAngle());
 			setUsedEncDist(Robot::driveTrain->ReturnEncoderDistance()); //record used Encoder Distance at end of step 2
 		}
+	}
+	if (getAutonStep() == 6){
+		RobotMap::ballVibrator->Set(0.0); //stop
+		Robot::shooter->shooterMotor->Set(0.0); //stop
+		RobotMap::ballFeederBallFeederSpike->Set(0.0); //stop
+		RobotMap::ballSubFeeder->Set(0.0); //stop
 	}
 
 }
