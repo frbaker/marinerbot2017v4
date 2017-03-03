@@ -54,12 +54,12 @@ DriveTrain::DriveTrain() : Subsystem("DriveTrain") {
      * }
      */
 
-   lf->SetFeedbackDevice(CANTalon::CtreMagEncoder_Absolute);
+   //lf->SetFeedbackDevice(CANTalon::CtreMagEncoder_Absolute);
    lr->SetFeedbackDevice(CANTalon::CtreMagEncoder_Absolute);
    lr->SetSensorDirection(true);
    rf->SetFeedbackDevice(CANTalon::CtreMagEncoder_Absolute);
    rr->SetFeedbackDevice(CANTalon::CtreMagEncoder_Absolute);
-   rr->SetSensorDirection(true);
+   rf->SetSensorDirection(true);
 
 
 
@@ -123,9 +123,9 @@ float DriveTrain::driveToAngle(double targetAngle){
 	double myY = 0.0;
 	double myZ = 0.0;
 
-	myX = Robot::oi->getJoystick1()->GetRawAxis(0);
-	myY = Robot::oi->getJoystick1()->GetRawAxis(1);
-	myZ = Robot::oi->getJoystick1()->GetRawAxis(2);
+	myX = Robot::oi->getJoystick1()->GetRawAxis(1);
+	myY = Robot::oi->getJoystick1()->GetRawAxis(2);
+	myZ = Robot::oi->getJoystick1()->GetRawAxis(3);
 
 
 	if(turnAngle<4){
@@ -173,21 +173,34 @@ double DriveTrain::calculatePID(double setpoint, double current, double Kp, doub
 float DriveTrain::ReturnEncoderDistance(){
 	//This method returns the average of the 4 encoder distances
 
-	int lf_encoder = lf->GetEncPosition()*25.12;
+	//int lf_encoder = lf->GetEncPosition()*25.12;
 	int lr_encoder = lr->GetEncPosition()*25.12;
 	int rf_encoder = rf->GetEncPosition()*25.12;
 	int rr_encoder = rr->GetEncPosition()*25.12;
 
-	float encDistance = (lf_encoder + lr_encoder + rr_encoder + rf_encoder) / 4; //averages the values from all encoders
+	//float encDistance = (lf_encoder + lr_encoder + rr_encoder + rf_encoder) / 4; //averages the values from all encoders
+	float encDistance = (rr_encoder + lr_encoder + rf_encoder) / 3; //averages the values from all encoders
+
+	return encDistance;
+}
+
+float DriveTrain::ReturnStrafeRightEncoderDistance(){
+	//This method returns the average of the 2 encoder distances going forward when we stafe right
+
+	//int lf_encoder = lf->GetEncPosition()*25.12;
+	int rr_encoder = rr->GetEncPosition()*25.12;
+
+
+	float encDistance = rr_encoder; //averages the values from all encoders
 
 	return encDistance;
 }
 
 void DriveTrain::ResetEncoderDistance(){
-	lf->SetPosition(0);
-	lr->SetPosition(0);
-	rf->SetPosition(0);
-	rr->SetPosition(0);
+	//lf->SetPosition(0);
+	this->lr->SetPosition(0.0);
+	this->rf->SetPosition(0.0);
+	this->rr->SetPosition(0.0);
 
 }
 
@@ -211,10 +224,56 @@ void DriveTrain::ResetGyroAngle(){
 
 //}
 void DriveTrain::takeJoystickInputs(double x, double y, double z, double angle){
-	DriveTrain::mecanum->MecanumDrive_Cartesian(Db(x), Db(y), Db(z), angle);
+	//The Y Axis is forward and back,
+	//The X Axis is side to side
+	//The Z Axis rotates
+	//DriveTrain::mecanum->MecanumDrive_Cartesian(Db(x), Db(y), Db(z), angle);
+
+	//twist is swapped with strafe
+
+	/*
+	 * We have an issue with strafe - adding a hack to invert motors only
+	 * while we are strafing
+	 * */
+    //RobotMap::driveTrainMecanum->SetInvertedMotor(RobotDrive::kFrontRightMotor, true);
+	// RobotMap::driveTrainMecanum->SetInvertedMotor(RobotDrive::kFrontLeftMotor, true);
+    //RobotMap::driveTrainMecanum->SetInvertedMotor(RobotDrive::kRearRightMotor, true);
+    // RobotMap::driveTrainMecanum->SetInvertedMotor(RobotDrive::kRearLeftMotor, true);
+
+/*
+	if (x > 0.1 || x < 0.1){ // we are trying to strafe
+		RobotMap::driveTrainMecanum->SetInvertedMotor(RobotDrive::kFrontRightMotor, true);
+		RobotMap::driveTrainMecanum->SetInvertedMotor(RobotDrive::kRearRightMotor, true);
+		RobotMap::driveTrainMecanum->SetInvertedMotor(RobotDrive::kFrontLeftMotor, true);
+		RobotMap::driveTrainMecanum->SetInvertedMotor(RobotDrive::kRearLeftMotor, true);
+	}
+	else{
+		RobotMap::driveTrainMecanum->SetInvertedMotor(RobotDrive::kFrontRightMotor, false);
+		RobotMap::driveTrainMecanum->SetInvertedMotor(RobotDrive::kRearRightMotor, false);
+		RobotMap::driveTrainMecanum->SetInvertedMotor(RobotDrive::kFrontLeftMotor, true);
+		RobotMap::driveTrainMecanum->SetInvertedMotor(RobotDrive::kRearLeftMotor, true);
+	}
+*/
+	/*
+	RobotMap::driveTrainMecanum->SetInvertedMotor(RobotDrive::kFrontRightMotor, true);
+	RobotMap::driveTrainMecanum->SetInvertedMotor(RobotDrive::kRearRightMotor, true);
+	RobotMap::driveTrainMecanum->SetInvertedMotor(RobotDrive::kFrontLeftMotor, false);
+	RobotMap::driveTrainMecanum->SetInvertedMotor(RobotDrive::kRearLeftMotor, false);
+	 */
+
+	DriveTrain::mecanum->MecanumDrive_Cartesian(Db(x), Db(z)*-1, Db(y)*-1, 0.0);
+	//DriveTrain::mecanum->MecanumDrive_Cartesian(Db(x), Db(y), Db(z), angle);
+	/*if (x > 0.1 || x < 0.1){ // we are trying to strafe
+			DriveTrain::mecanum->MecanumDrive_Cartesian(Db(x), Db(y), Db(z), 0.0);
+		}
+	else{
+		DriveTrain::mecanum->MecanumDrive_Cartesian(Db(x), Db(y), Db(z), 0.0);
+	}
+	*/
 }
 void DriveTrain::autoDrive(double x, double y, double z, double angle){
-	DriveTrain::mecanum->MecanumDrive_Cartesian(Db(x), Db(y), Db(z), angle);
+	//DriveTrain::mecanum->MecanumDrive_Cartesian(Db(x), Db(y), Db(z), angle);
+		DriveTrain::mecanum->MecanumDrive_Cartesian(Db(x), Db(z)*-1, Db(y)*-1, angle);
 }
 
 void DriveTrain::stop(){

@@ -46,10 +46,14 @@ private:
 
 
 public:
-	std::shared_ptr<CANTalon> lf;
+	std::shared_ptr<TalonSRX> lf;
 		std::shared_ptr<CANTalon> rf;
 		std::shared_ptr<CANTalon> lr;
 		std::shared_ptr<CANTalon> rr;
+		//std::shared_ptr<TalonSRX> rr;
+
+
+
 	DriveTrain();
 	void InitDefaultCommand();
 
@@ -61,6 +65,7 @@ public:
 	//New Stuff
 
 	float ReturnEncoderDistance();
+	float ReturnStrafeRightEncoderDistance();
 	void ResetEncoderDistance();
 	float ReturnGyroAngle(float gyroPosition);
 	void ResetGyroAngle();

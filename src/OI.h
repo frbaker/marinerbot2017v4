@@ -28,6 +28,8 @@ private:
 		std::shared_ptr<JoystickButton> joystickButton203;
 		std::shared_ptr<JoystickButton> joystickButton204;
 		std::shared_ptr<JoystickButton> joystickButton205;
+		std::shared_ptr<JoystickButton> joystickButton206;
+
 
 
 

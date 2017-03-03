@@ -92,6 +92,11 @@ void Robot::DisabledInit(){
 	SmartDashboard::PutNumber("autonSec",1);
 
 
+/*	Robot::driveTrain->rf->Reset();
+	Robot::driveTrain->rr->Reset();
+	Robot::driveTrain->lr->Reset();
+*/
+
 
 
 }
@@ -102,10 +107,13 @@ void Robot::DisabledPeriodic() {
 
 void Robot::AutonomousInit() {
 	//Setting the drivetrain talons to brake mode.
-			Robot::driveTrain->lf->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
+			//Robot::driveTrain->lf->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
 			Robot::driveTrain->rf->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
 			Robot::driveTrain->rr->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
 			Robot::driveTrain->lr->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Brake);
+
+
+
 
 	if (autonomousCommand.get() != nullptr)
 		autonomousCommand->Start();
@@ -118,7 +126,7 @@ void Robot::AutonomousPeriodic() {
 
 void Robot::TeleopInit() {
 	//Setting the DriveTrain Talons to Coast Mode.
-				Robot::driveTrain->lf->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
+				//Robot::driveTrain->lf->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
 				Robot::driveTrain->rf->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
 				Robot::driveTrain->rr->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);
 				Robot::driveTrain->lr->ConfigNeutralMode(CANSpeedController::NeutralMode::kNeutralMode_Coast);

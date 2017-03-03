@@ -32,10 +32,11 @@ public:
 
 
 // ************  Motors for CAN bus ***********
-	static std::shared_ptr<CANTalon> driveTrainLf;
+	static std::shared_ptr<TalonSRX> driveTrainLf;
 	static std::shared_ptr<CANTalon> driveTrainRf;
 	static std::shared_ptr<CANTalon> driveTrainLr;
 	static std::shared_ptr<CANTalon> driveTrainRr;
+	//static std::shared_ptr<TalonSRX> driveTrainRr;
 
 
 // ********* Motors for PWM ***************
@@ -52,6 +53,7 @@ public:
 	static std::shared_ptr<SpeedController> gearMoverGearSparkMotor;
 	static std::shared_ptr<Encoder> shooterShooterEncoder;
 	static std::shared_ptr<CANTalon> shooterShooterMotor;
+	static std::shared_ptr<CANTalon> shooterShooterMotor2;
 	static std::shared_ptr<CANTalon> climberClimberMotor;
 	static std::shared_ptr<SpeedController> shooterAdjusterShooterAdjust;
 	static std::shared_ptr<AnalogInput> shooterAdjusterShooterPot;

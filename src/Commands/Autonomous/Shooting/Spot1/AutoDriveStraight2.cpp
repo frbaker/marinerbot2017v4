@@ -34,14 +34,15 @@ void AutoDriveStraight2::Execute() {
 
 // Make this return true when this Command no longer needs to run execute()
 bool AutoDriveStraight2::IsFinished() {
-
-	float encDist = (Robot::driveTrain->lf->GetEncPosition()*25.12 + Robot::driveTrain->lr->GetEncPosition()*25.12 + Robot::driveTrain->rf->GetEncPosition()*25.12 + Robot::driveTrain->rr->GetEncPosition()*25.12) / 4;
+	return false;
+	/*float encDist = (Robot::driveTrain->lf->GetEncPosition()*25.12 + Robot::driveTrain->lr->GetEncPosition()*25.12 + Robot::driveTrain->rf->GetEncPosition()*25.12 + Robot::driveTrain->rr->GetEncPosition()*25.12) / 4;
 	if(encDist >9){
 		return true;
 	}
 	else{
 	return false;
 	}
+	*/
 }
 
 // Called once after isFinished returns true

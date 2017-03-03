@@ -23,19 +23,20 @@
 // Below is to be used if its on CAN bus
 
 //std::shared_ptr<CANTalon> RobotMap::driveTrainLf;
-std::shared_ptr<CANTalon> RobotMap::driveTrainRf;
-std::shared_ptr<CANTalon> RobotMap::driveTrainLr;
-std::shared_ptr<CANTalon> RobotMap::driveTrainRr;
-std::shared_ptr<CANTalon> RobotMap::driveTrainLf;
+
 
 // Below is to be used if its on a PWM
 /*
 std::shared_ptr<TalonSRX> RobotMap::driveTrainLf;
 std::shared_ptr<TalonSRX> RobotMap::driveTrainRf;
 std::shared_ptr<TalonSRX> RobotMap::driveTrainLr;
-std::shared_ptr<TalonSRX> RobotMap::driveTrainRr;
-*/
 
+*/
+std::shared_ptr<CANTalon> RobotMap::driveTrainRf;
+std::shared_ptr<CANTalon> RobotMap::driveTrainLr;
+std::shared_ptr<CANTalon> RobotMap::driveTrainRr;
+//std::shared_ptr<CANTalon> RobotMap::driveTrainLf;
+std::shared_ptr<TalonSRX> RobotMap::driveTrainLf;
 
 std::shared_ptr<RobotDrive> RobotMap::driveTrainMecanum;
 std::shared_ptr<SpeedController> RobotMap::ballFeederBallFeederSpike;
@@ -43,6 +44,7 @@ std::shared_ptr<SpeedController> RobotMap::conveyerSpeedController1;
 std::shared_ptr<SpeedController> RobotMap::gearMoverGearSparkMotor;
 std::shared_ptr<Encoder> RobotMap::shooterShooterEncoder;
 std::shared_ptr<CANTalon> RobotMap::shooterShooterMotor;
+std::shared_ptr<CANTalon> RobotMap::shooterShooterMotor2;
 std::shared_ptr<CANTalon> RobotMap::climberClimberMotor;
 std::shared_ptr<SpeedController> RobotMap::shooterAdjusterShooterAdjust;
 std::shared_ptr<AnalogInput> RobotMap::shooterAdjusterShooterPot;
@@ -74,8 +76,8 @@ void RobotMap::init() {
 
 
 
-    gearSideUltra.reset(new AnalogInput(1)); // assigns ultra to be an ultrasonic sensor which uses DigitalOutput 1 for the echo pulse and DigitalInput 1 for the trigger pulse
-    nonGearSideUltra.reset(new AnalogInput(2)); // assigns ultra to be an ultrasonic sensor which uses DigitalOutput 1 for the echo pulse and DigitalInput 1 for the trigger pulse
+    //gearSideUltra.reset(new AnalogInput(1)); // assigns ultra to be an ultrasonic sensor which uses DigitalOutput 1 for the echo pulse and DigitalInput 1 for the trigger pulse
+    //nonGearSideUltra.reset(new AnalogInput(2)); // assigns ultra to be an ultrasonic sensor which uses DigitalOutput 1 for the echo pulse and DigitalInput 1 for the trigger pulse
     //ahrs.reset(new AHRS(SPI::Port::kMXP));
 
 
@@ -87,17 +89,27 @@ void RobotMap::init() {
 
 // Below is the CAN id's if drive is on CAN bus
 
-
-    driveTrainLf.reset(new CANTalon(7));
+// in reality this is the right front
+    driveTrainLf.reset(new TalonSRX(4));
     lw->AddActuator("DriveTrain", "Lf", driveTrainLf);
+
     
+
+    // possibly the right rear
     driveTrainRf.reset(new CANTalon(5));
     lw->AddActuator("DriveTrain", "Rf", driveTrainRf);
     
+
+    //probably left rear
     driveTrainLr.reset(new CANTalon(12));
     lw->AddActuator("DriveTrain", "Lr", driveTrainLr);
     
-    driveTrainRr.reset(new CANTalon(4));
+    //driveTrainRr.reset(new CANTalon(4));
+
+
+
+    // in reality its the left front
+    driveTrainRr.reset(new CANTalon(7));
     lw->AddActuator("DriveTrain", "Rr", driveTrainRr);
 
 
@@ -122,8 +134,10 @@ void RobotMap::init() {
     
 
 
-    driveTrainMecanum.reset(new RobotDrive(driveTrainLf, driveTrainLr,
-              driveTrainRf, driveTrainRr));
+    driveTrainMecanum.reset(new RobotDrive(driveTrainLf, driveTrainLr, driveTrainRf, driveTrainRr));
+
+    //driveTrainMecanum.reset(new RobotDrive(driveTrainLf, driveTrainRf,
+    	//	driveTrainLr, driveTrainRr));
     
     driveTrainMecanum->SetSafetyEnabled(false);
 
@@ -134,19 +148,19 @@ void RobotMap::init() {
 
 // ***************Motor Inversions for PWM ****************
 
-  /*  driveTrainMecanum->SetInvertedMotor(RobotDrive::kRearLeftMotor, true);
-    driveTrainMecanum->SetInvertedMotor(RobotDrive::kRearRightMotor, true);
-    driveTrainMecanum->SetInvertedMotor(RobotDrive::kFrontRightMotor, true);
+    //driveTrainMecanum->SetInvertedMotor(RobotDrive::kRearLeftMotor, true);
+    //driveTrainMecanum->SetInvertedMotor(RobotDrive::kRearRightMotor, true);
+   // driveTrainMecanum->SetInvertedMotor(RobotDrive::kFrontRightMotor, true);
     //driveTrainMecanum->SetInvertedMotor(RobotDrive::kFrontLeftMotor, true);
-*/
+
 
 //*****************Motor Inversions for CAN *****************
 
 
-      driveTrainMecanum->SetInvertedMotor(RobotDrive::kFrontRightMotor, true);
-      driveTrainMecanum->SetInvertedMotor(RobotDrive::kFrontLeftMotor, true);
-      driveTrainMecanum->SetInvertedMotor(RobotDrive::kRearRightMotor, true);
-       driveTrainMecanum->SetInvertedMotor(RobotDrive::kRearLeftMotor, true);
+      //*** driveTrainMecanum->SetInvertedMotor(RobotDrive::kFrontRightMotor, true); ***/
+     //driveTrainMecanum->SetInvertedMotor(RobotDrive::kFrontLeftMotor, true);
+      //***driveTrainMecanum->SetInvertedMotor(RobotDrive::kRearRightMotor, true); ***/
+      // driveTrainMecanum->SetInvertedMotor(RobotDrive::kRearLeftMotor, true);
 
 
 
@@ -169,8 +183,10 @@ void RobotMap::init() {
     shooterShooterEncoder->SetDistancePerPulse(1.0);
     shooterShooterEncoder->SetPIDSourceType(PIDSourceType::kRate);
     shooterShooterMotor.reset(new CANTalon(13));
-    lw->AddActuator("Shooter", "ShooterMotor", shooterShooterMotor);
-    
+	lw->AddActuator("Shooter", "ShooterMotor", shooterShooterMotor);
+	shooterShooterMotor2.reset(new CANTalon(23));
+	lw->AddActuator("Shooter", "ShooterMotor2", shooterShooterMotor2);
+
     climberClimberMotor.reset(new CANTalon(8));
     lw->AddActuator("Climber", "ClimberMotor", climberClimberMotor);
     

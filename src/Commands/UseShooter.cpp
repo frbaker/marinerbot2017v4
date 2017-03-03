@@ -85,6 +85,7 @@ SmartDashboard::PutNumber("Difference", difference);
 */
 void UseShooter::DoNotShootIt(){
 	RobotMap::shooterShooterMotor->Set(0);
+	RobotMap::shooterShooterMotor2->Set(0);
 }
 double UseShooter::SpeedUp(double curSetting){
 	return curSetting + .02;

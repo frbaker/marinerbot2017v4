@@ -34,23 +34,40 @@ void AutonomousCommand::Initialize() {
 	setStartTime(Timer::GetFPGATimestamp());
 	setElapsedTime(0.0);
 	SmartDashboard::PutNumber("Elapsed Time", 0);
+	Robot::driveTrain->ResetEncoderDistance();
+
 	//SetTimeout(15); //set a 15 second timeout
 }
 
 // Called repeatedly when this Command is scheduled to run
 void AutonomousCommand::Execute() {
 	setElapsedTime(getStartTime());
+	//setUsedEncDist(0.0);
 
-	if (getElapsedTime() > 35){
-	//if (getElapsedTime() > 15){
+
+
+	//if (getElapsedTime() > 35){
+	if (getElapsedTime() > 15){
+		setAutonStep(1); // initialize on step 1
+			setUsedEncDist(0.0); //our traveled distance starts at zero
+			setStartTime(Timer::GetFPGATimestamp());
+			setElapsedTime(0.0);
+			SmartDashboard::PutNumber("Elapsed Time", 0);
+			Robot::driveTrain->ResetEncoderDistance();
+		setAutonStep(1);
+		Robot::driveTrain->ResetEncoderDistance();
+
+
 				End();
+
+
 		this->Cancel();
 	}
 
 	//Todo - this is just for testing or backup plan in case encoders
 	// are not working for us - should be commented out
 	//for competition (if used, should be moved to each individual case
-	//as the timming will be different for each scenario)
+	//as the timing will be different for each scenario)
 /*
 	if (getElapsedTime() < 1.5 ) {
 		setAutonStep(1); //drive forward 9"
@@ -69,7 +86,7 @@ void AutonomousCommand::Execute() {
 	}
 */
 
-	if (getElapsedTime() < 4.5 ) {
+	/*if (getElapsedTime() < 4.5 ) {
 		setAutonStep(1); //drive forward 9"
 	}
 	else if (getElapsedTime() >= 4.5 && getElapsedTime()<9.7){
@@ -88,7 +105,7 @@ void AutonomousCommand::Execute() {
 		setAutonStep(6); //nothing
 	}
 		//End of testing code
-
+*/
 
 
 
@@ -97,6 +114,10 @@ void AutonomousCommand::Execute() {
 
 
 	int autonNumber = SmartDashboard::GetNumber("autonNumber",1);
+
+
+
+
 	switch(autonNumber){
 	case 1:
 		//position 1:Blue
@@ -128,10 +149,16 @@ void AutonomousCommand::Execute() {
 		SmartDashboard::PutNumber("Running Autonomous Routine", autonNumber);
 		auton6();
 		break;
+	case 0:
+			//position 3:Red
+			SmartDashboard::PutNumber("Running Autonomous Routine", autonNumber);
+
+			break;
 	default:
 		SmartDashboard::PutNumber("Running Autonomous Routine", 00);
 		auton1();
 		break;
+
 }
 
 }
@@ -197,9 +224,24 @@ float AutonomousCommand::getUsedEncDist(){
 	return this->usedEncDist;
 }
 
+void AutonomousCommand::setUsedStrafeRightEncDist(float totalStrafeRightDist){
+	this->strafeRightDist = totalStrafeRightDist;
+}
+float AutonomousCommand::getStrafeRightEncDist(){
+	return this->strafeRightDist;
+}
+
 
 
 void AutonomousCommand::auton1(){
+
+	/*Get the data from the pi so that we can add them into the autonomous routines*/
+	double targetAcquired = SmartDashboard::GetNumber("twistDirection",1);
+	double distanceAway = SmartDashboard::GetNumber("distanceAway",1);
+	double deflection = SmartDashboard::GetNumber("deflection",1);
+
+	SmartDashboard::PutNumber("Encoder Distance", Robot::driveTrain->ReturnEncoderDistance());
+
 	/*
 	 * 1. Drive Forward 60% speed for 9 inches
 	 */
@@ -258,6 +300,7 @@ void AutonomousCommand::auton1(){
 		SmartDashboard::PutString("Turning to", "-135 degrees");
 		if(RobotMap::drivegyro->GetAngle() > -135){
 			Robot::driveTrain->autoDrive(0.0, 0.0, -0.3, 0.0);
+
 		}
 		else{
 
@@ -298,19 +341,26 @@ void AutonomousCommand::auton1(){
 		Robot::shooter->shooterMotor->Set(0.0); //stop
 		RobotMap::ballFeederBallFeederSpike->Set(0.0); //stop
 		RobotMap::ballSubFeeder->Set(0.0); //stop
+		Robot::driveTrain->ResetEncoderDistance();
+
 	}
 
 }
 
 void AutonomousCommand::auton2(){
+		/*test routine to place gear with vision*/
+
 	/*
-	 * 1. Drive Forward 60% speed for 9 inches
+	 * 1. Drive Forward 60% speed for 173 inches
 	 */
 	if (getAutonStep() == 1){
-		if(Robot::driveTrain->ReturnEncoderDistance()-getUsedEncDist() < 9){
+		//SmartDashboard::PutString("Going Forward 173");
+		SmartDashboard::PutString("Driving Forward", "173 Inches");
+		if(Robot::driveTrain->ReturnEncoderDistance()-getUsedEncDist() < 173){
 			Robot::driveTrain->autoDrive(0.0, 0.6, 0.0, RobotMap::drivegyro->GetAngle());
 		}
 		else {
+			Robot::driveTrain->autoDrive(0.0, 0.0, 0.0, 0.0); //full stop
 			setAutonStep(getAutonStep() + 1);  //go to next step
 			SmartDashboard::PutNumber("Routine1 End1 EncDist", getUsedEncDist()); //show us the average encoder distance values
 			setUsedEncDist(Robot::driveTrain->ReturnEncoderDistance()); //record used Encoder Distance at end of step 1
@@ -318,13 +368,15 @@ void AutonomousCommand::auton2(){
 	}
 
 	/*
-	 * 2. Turn left till we reach -90 degrees
+	 * 2. Turn right till we reach 120 degrees
 	 */
 	if (getAutonStep() == 2){
-		if(RobotMap::drivegyro->GetAngle() > -90){
-			Robot::driveTrain->autoDrive(0.0, 0.0, -0.3, 0.0);
+		SmartDashboard::PutString("Turning to", "120 degrees");
+		if(RobotMap::drivegyro->GetAngle() > 120){
+			Robot::driveTrain->autoDrive(0.0, 0.0, 0.3, 0.0);
 		}
 		else{
+			Robot::driveTrain->autoDrive(0.0, 0.0, 0.0, 0.0); //full stop
 			setAutonStep(getAutonStep() + 1); //go to next step
 			SmartDashboard::PutNumber("Routine1 End2 EncDist", Robot::driveTrain->ReturnEncoderDistance());
 			SmartDashboard::PutNumber("Routine1 End2 Angle", RobotMap::drivegyro->GetAngle());
@@ -333,14 +385,51 @@ void AutonomousCommand::auton2(){
 	}
 
 	/*
-	 * 3. Drive Forward 60% speed for 216 inches
+	 * 3. Strafe Right 60% speed for 48 inches
 	 */
 	if (getAutonStep() == 3){
-		if(Robot::driveTrain->ReturnEncoderDistance()-getUsedEncDist() < 216){
+
+		/*Get the data from the pi so that we can add them into the autonomous routines*/
+		double targetAcquired = SmartDashboard::GetNumber("twistDirection",1);
+		double distanceAway = SmartDashboard::GetNumber("distanceAway",1);
+		double deflection = SmartDashboard::GetNumber("deflection",1);
+		double adjustZ = 0.0;
+
+		if(Robot::driveTrain->ReturnStrafeRightEncoderDistance()-getStrafeRightEncDist() < 48){
+
+
+			if(RobotMap::drivegyro->GetAngle() > 122){
+				double adjustZ = -0.6;
+			}
+			else if(RobotMap::drivegyro->GetAngle() < 118){
+				double adjustZ = 0.6;
+			}
+
+
+			if (distanceAway < 14){ //if we are close enough - toss the gear
+				setAutonStep(getAutonStep() + 1); //go to next step
+			}
+
+			if (deflection < -4){
+				//move forward and strafe
+				Robot::driveTrain->autoDrive(0.6, 0.6, adjustZ, RobotMap::drivegyro->GetAngle());
+
+			}
+			else if (deflection > 4){
+				//move backwards and strafe
+				Robot::driveTrain->autoDrive(0.6, -0.6, adjustZ, RobotMap::drivegyro->GetAngle());
+			}
+			else{
+				//strafe straight slideways
+				Robot::driveTrain->autoDrive(0.6, 0.0, adjustZ, RobotMap::drivegyro->GetAngle());
+			}
+
+		SmartDashboard::PutString("Strafing Right 48",  "48 Inches");
 			//get our current encDistance - should add a sanity check to keep from looping forever if we don't get a sensor reading
-			Robot::driveTrain->autoDrive(0.0, 0.6, 0.0, RobotMap::drivegyro->GetAngle());
+			//Robot::driveTrain->autoDrive(0.6, 0.0, 0.0, RobotMap::drivegyro->GetAngle());
 		}
 		else{
+			Robot::driveTrain->autoDrive(0.0, 0.0, 0.0, 0.0); //full stop
 			setAutonStep(getAutonStep() + 1); //go to next step
 			SmartDashboard::PutNumber("Routine1 End3 EncDist", Robot::driveTrain->ReturnEncoderDistance());
 			setUsedEncDist(Robot::driveTrain->ReturnEncoderDistance()); //record used Encoder Distance at end of step 3
@@ -348,20 +437,45 @@ void AutonomousCommand::auton2(){
 	}
 
 	/*
-	 * 4. Turn left another -36 degrees till we reach -126
-	 *
+	 * 4. Toss the gear on the ground
 	 */
 	if (getAutonStep() == 4){
+		SmartDashboard::PutString("Tossing Gear", "Yea Boi!");
+		Robot::gearMover->TossGear();
+		setAutonStep(getAutonStep() + 1); //go to next step
+
+	}
+
+	/*
+	 * 5. Start the shooter, subshooter, ball vibrator, and x-mas tree
+	 */
+	//todo add a timeout
+	if (getAutonStep() == 5){
+		//SmartDashboard::PutString("Shooting");
 		if(RobotMap::drivegyro->GetAngle() > -126){
-			Robot::driveTrain->autoDrive(0.0, 0.0, -0.3, 0.0);
+			Robot::shooter->justShootMe();
+			RobotMap::ballVibrator->Set(0.25);
+			RobotMap::ballFeederBallFeederSpike->Set(0.5); //the tree (no longer on a spike relay)
+			RobotMap::ballSubFeeder->Set(0.75); //The subfeeder
 		}
 		else{
+			RobotMap::ballVibrator->Set(0.0); //stop
+			Robot::shooter->shooterMotor->Set(0.0); //stop
+			RobotMap::ballFeederBallFeederSpike->Set(0.0); //stop
+			RobotMap::ballSubFeeder->Set(0.0); //stop
 			setAutonStep(getAutonStep() + 1); //go to next step
 			SmartDashboard::PutNumber("Routine1 End4 EncDist", Robot::driveTrain->ReturnEncoderDistance());
 			SmartDashboard::PutNumber("Routine1 End4 Angle", RobotMap::drivegyro->GetAngle());
 			setUsedEncDist(Robot::driveTrain->ReturnEncoderDistance()); //record used Encoder Distance at end of step 2
 		}
 	}
+	if (getAutonStep() == 6){
+		RobotMap::ballVibrator->Set(0.0); //stop
+		Robot::shooter->shooterMotor->Set(0.0); //stop
+		RobotMap::ballFeederBallFeederSpike->Set(0.0); //stop
+		RobotMap::ballSubFeeder->Set(0.0); //stop
+	}
+
 }
 void AutonomousCommand::auton3(){
 	/*

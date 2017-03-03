@@ -39,19 +39,15 @@ void DriveWithJoy::Execute() {
 
 
 	SmartDashboard::PutNumber("Drive Angle", RobotMap::drivegyro->GetAngle());
-	//double mrAngle = RobotMap::driveGyro->GetYaw();
-	//Robot::driveTrain->takeJoystickInputs(Robot::oi->getJoystick1()->GetRawAxis(0), Robot::oi->getJoystick1()->GetRawAxis(1)*-1,Robot::oi->getJoystick1()->GetRawAxis(2), RobotMap::drivegyro->GetAngle()); original stuff that kinda works
-	//Robot::driveTrain->takeJoystickInputs(Robot::oi->getJoystick1()->GetRawAxis(0), Robot::oi->getJoystick1()->GetRawAxis(1)*-1,Robot::oi->getJoystick1()->GetRawAxis(2), 0.0);
-	Robot::driveTrain->takeJoystickInputs(Robot::oi->getJoystick1()->GetRawAxis(0), Robot::oi->getJoystick1()->GetRawAxis(1)*-1,Robot::oi->getJoystick1()->GetRawAxis(2), RobotMap::drivegyro->GetAngle());
-	//Robot::driveTrain->takeJoystickInputs(0.0, 0.0, 0.0, 0.0);
-	/*SmartDashboard::PutNumber("Drive Yaw", RobotMap::driveGyro->GetYaw());
-	SmartDashboard::PutNumber("Drive Temp", RobotMap::driveGyro->GetTempC());
-	SmartDashboard::PutNumber("Drive Compas", RobotMap::driveGyro->GetCompassHeading());
-	SmartDashboard::PutNumber("A Gyro", RobotMap::agyro->GetAngle());
-	SmartDashboard::PutNumber("RB Gyro", RobotMap::driveTrainRbGyro->GetAngle());
-	*/
-	//SmartDashboard::PutNumber("Drive A Gyro", RobotMap::driveAgyro->GetAngle());
-	//SmartDashboard::PutNumber("Drive A Gyro", ahrs->GetAngle());
+	double driveX = Robot::oi->getJoystick1()->GetRawAxis(0);
+	double driveY = Robot::oi->getJoystick1()->GetRawAxis(1); //not sure why this is set to negative - change if erratic
+	double driveZ = Robot::oi->getJoystick1()->GetRawAxis(2);
+	double mrAngle = RobotMap::drivegyro->GetAngle();
+
+
+	Robot::driveTrain->takeJoystickInputs(driveX, driveY, driveZ, mrAngle);
+	//Robot::driveTrain->takeJoystickInputs(Robot::oi->getJoystick1()->GetRawAxis(0), Robot::oi->getJoystick1()->GetRawAxis(1)*-1,Robot::oi->getJoystick1()->GetRawAxis(2), RobotMap::drivegyro->GetAngle());
+
 
 
 }

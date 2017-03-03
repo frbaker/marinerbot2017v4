@@ -39,4 +39,6 @@ void GearMover::InitDefaultCommand() {
 
 // Put methods for controlling this subsystem
 // here. Call these from Commands.
-
+void GearMover::TossGear(){
+	gearSparkMotor->Set(0.67);
+}
